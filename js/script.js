@@ -45,7 +45,7 @@ function display() {
   tasksContainer.innerHTML = task;
   resetForm();
 }
-display();
+// display();
 // create
 document.querySelector("form").addEventListener("submit", function (e) {
   e.preventDefault();
@@ -95,4 +95,7 @@ function resetForm() {
   newTaskInfo.value = "";
   newTaskdeadLine.value = "";
   formCotrol = "submit";
+}
+if (tasksContent.length != 0) {
+  display();
 }
