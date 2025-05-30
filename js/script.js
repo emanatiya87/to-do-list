@@ -5,17 +5,22 @@ let newTaskdeadLine = document.getElementById("newTaskdeadLine");
 let formCotrol = "submit";
 let rowUpdatedIndex = "";
 let taskRow = document.getElementsByClassName("taskRow");
+let progressBar = document.getElementById("progressBar");
 // Read
 function display() {
   let tasksContainer = document.getElementById("tasksContainer");
   let task = "";
+  let complet = 0;
   tasksContent.forEach((element, i) => {
+    if (element.isDone === "true") {
+      complet++;
+    }
     task += `
      <div class="row my-1 p-1 rounded-5 shadow taskRow ${
        element.isDone === "true" ? "taskDone" : "taskRow "
      }" >
                   <div
-                    class="col-md-7 col-5 d-flex flex-column justify-content-between"
+                    class="col-md-7 col-4 d-flex flex-column justify-content-between"
                   >
 
                     <p class="fw-medium">${element.taskInfo}</p>
@@ -25,7 +30,7 @@ function display() {
                     </p>
                   </div>
                     <div
-                    class="col-md-2 col-2 n"
+                    class="col-md-2 col-3 n"
                   >
                     <p class="fw-medium">DeadLine</p>
                     <p class="mb-0">
@@ -34,7 +39,7 @@ function display() {
                     </p>
                   </div>
                   <div
-                    class="col-md-3 col-5 d-flex justify-content-around align-items-center"
+                    class="col-md-3 col-5 d-flex justify-content-around align-items-center flex-column flex-sm-row"
                   >
                     <i class="fa-solid fa-trash-can bg-danger"  onclick="removeRow(${i})"></i>
                     <i class="fa-solid fa-check-double bg-success" onclick="Done(${i})"></i>
@@ -43,6 +48,9 @@ function display() {
       </div>`;
   });
   tasksContainer.innerHTML = task;
+  progressBar.innerHTML = `
+   <label for="progress" class="text-light fs-2">${complet}/${tasksContent.length}</label>
+   <progress id="progress" value="${complet}" max="${tasksContent.length}"></progress>`;
   resetForm();
 }
 // display();
