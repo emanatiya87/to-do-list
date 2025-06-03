@@ -108,22 +108,22 @@ function resetForm() {
 if (tasksContent.length != 0) {
   display(tasksContent);
 }
-// to appear only completed tasks
-let appearCompletedTaks = document.getElementById("appearCompletedTaks");
-let appeaeUnCompletedTasks = document.getElementById("appeaeUnCompletedTasks");
-appearCompletedTaks.onclick = function () {
-  let done = (completedTasks = tasksContent.filter((e) => e.isDone == "true"));
-  display(done);
-};
-// to appear Uncompleted tasks
-appeaeUnCompletedTasks.onclick = function () {
-  let waiting = (completedTasks = tasksContent.filter(
-    (e) => e.isDone == "false"
-  ));
-  display(waiting);
-};
-// btn to appear all
-let AllTasks = document.getElementById("AllTasks");
-AllTasks.onclick = function () {
-  display(tasksContent);
-};
+// // to appear only completed tasks
+// let appearCompletedTaks = document.getElementById("appearCompletedTaks");
+// let appeaeUnCompletedTasks = document.getElementById("appeaeUnCompletedTasks");
+// appearCompletedTaks.onclick = function () {
+//   let done = (completedTasks = tasksContent.filter((e) => e.isDone == "true"));
+//   display(done);
+// };
+// // to appear Uncompleted tasks
+// appeaeUnCompletedTasks.onclick = function () {
+//   let waiting = (completedTasks = tasksContent.filter(
+//     (e) => e.isDone == "false"
+//   ));
+//   display(waiting);
+// };
+// // btn to appear all
+// let AllTasks = document.getElementById("AllTasks");
+// AllTasks.onclick = function () {
+//   display(tasksContent);
+// };
