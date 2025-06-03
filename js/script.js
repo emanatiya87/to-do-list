@@ -1,5 +1,6 @@
 // variables
 let tasksContent = JSON.parse(localStorage.getItem("tasksContent")) || [];
+let tasksContainer = document.getElementById("tasksContainer");
 let newTaskInfo = document.getElementById("newTask");
 let newTaskdeadLine = document.getElementById("newTaskdeadLine");
 let formCotrol = "submit";
@@ -7,14 +8,15 @@ let rowUpdatedIndex = "";
 let taskRow = document.getElementsByClassName("taskRow");
 let progressBar = document.getElementById("progressBar");
 // Read
-function display() {
-  let tasksContainer = document.getElementById("tasksContainer");
+function display(content) {
   let task = "";
   let complet = 0;
-  tasksContent.forEach((element, i) => {
+  content.forEach((element, i) => {
+    // to calculate number of Completed tasks
     if (element.isDone === "true") {
       complet++;
     }
+
     task += `
      <div class="row my-1 p-1 rounded-5 shadow taskRow ${
        element.isDone === "true" ? "taskDone" : "taskRow "
@@ -53,7 +55,6 @@ function display() {
    <progress id="progress" value="${complet}" max="${tasksContent.length}"></progress>`;
   resetForm();
 }
-// display();
 // create
 document.querySelector("form").addEventListener("submit", function (e) {
   e.preventDefault();
@@ -73,13 +74,13 @@ document.querySelector("form").addEventListener("submit", function (e) {
     localStorage.setItem("tasksContent", JSON.stringify(tasksContent));
   }
   localStorage.setItem("tasksContent", JSON.stringify(tasksContent));
-  display();
+  display(tasksContent);
 });
 // delete
 function removeRow(i) {
   tasksContent.splice(i, 1);
   localStorage.setItem("tasksContent", JSON.stringify(tasksContent));
-  display();
+  display(tasksContent);
 }
 // upadete
 function Update(i) {
@@ -96,7 +97,7 @@ function Update(i) {
 function Done(i) {
   tasksContent[i].isDone = "true";
   localStorage.setItem("tasksContent", JSON.stringify(tasksContent));
-  display();
+  display(tasksContent);
 }
 //reset form
 function resetForm() {
@@ -105,5 +106,24 @@ function resetForm() {
   formCotrol = "submit";
 }
 if (tasksContent.length != 0) {
-  display();
+  display(tasksContent);
 }
+// to appear only completed tasks
+let appearCompletedTaks = document.getElementById("appearCompletedTaks");
+let appeaeUnCompletedTasks = document.getElementById("appeaeUnCompletedTasks");
+appearCompletedTaks.onclick = function () {
+  let done = (completedTasks = tasksContent.filter((e) => e.isDone == "true"));
+  display(done);
+};
+// to appear Uncompleted tasks
+appeaeUnCompletedTasks.onclick = function () {
+  let waiting = (completedTasks = tasksContent.filter(
+    (e) => e.isDone == "false"
+  ));
+  display(waiting);
+};
+// btn to appear all
+let AllTasks = document.getElementById("AllTasks");
+AllTasks.onclick = function () {
+  display(tasksContent);
+};
