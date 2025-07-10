@@ -43,9 +43,15 @@ function display(content) {
                   <div
                     class="col-md-3 col-5 d-flex justify-content-around align-items-center flex-column flex-sm-row"
                   >
-                    <i class="fa-solid fa-trash-can bg-danger"  onclick="removeRow(${i})"></i>
-                    <i class="fa-solid fa-check-double bg-success" onclick="Done(${i})"></i>
-                    <i class="fa-solid fa-pen-to-square bg-primary" onclick="Update(${i})"></i>
+                    <i class="fa-solid fa-trash-can bg-danger"  onclick="removeRow(${
+                      element.id
+                    })"></i>
+                    <i class="fa-solid fa-check-double bg-success" onclick="Done(${
+                      element.id
+                    })"></i>
+                    <i class="fa-solid fa-pen-to-square bg-primary" onclick="Update(${
+                      element.id
+                    })"></i>
                   </div>
       </div>`;
   });
@@ -66,36 +72,47 @@ document.querySelector("form").addEventListener("submit", function (e) {
     deadLineValue: newTaskdeadLine.value,
     taskDate: new Date().toLocaleDateString("en-GB"),
     isDone: "false",
+    id: Date.now(),
   };
   if (formCotrol == "submit") {
     tasksContent.push(newTask);
   } else if (formCotrol == "update") {
-    tasksContent[rowUpdatedIndex] = newTask;
-    localStorage.setItem("tasksContent", JSON.stringify(tasksContent));
+    const i = tasksContent.findIndex((task) => task.id === rowUpdatedIndex);
+    if (i !== -1) {
+      newTask.id = rowUpdatedIndex; // keep same ID
+      newTask.isDone = tasksContent[i].isDone; // keep old status
+      tasksContent[i] = newTask; // update task at the correct index
+    }
   }
   localStorage.setItem("tasksContent", JSON.stringify(tasksContent));
   display(tasksContent);
 });
 // delete
-function removeRow(i) {
-  tasksContent.splice(i, 1);
+function removeRow(id) {
+  tasksContent = tasksContent.filter((task) => task.id !== id);
   localStorage.setItem("tasksContent", JSON.stringify(tasksContent));
   display(tasksContent);
 }
 // upadete
-function Update(i) {
+function Update(id) {
+  const task = tasksContent.find((task) => task.id === id);
+  if (!task) return;
+
   const myModal = new bootstrap.Modal(
     document.getElementById("staticBackdrop")
   );
   myModal.show();
-  newTaskInfo.value = tasksContent[i].taskInfo;
-  newTaskdeadLine.value = tasksContent[i].deadLineValue;
+
+  newTaskInfo.value = task.taskInfo;
+  newTaskdeadLine.value = task.deadLineValue;
   formCotrol = "update";
-  rowUpdatedIndex = i;
+  rowUpdatedIndex = id;
 }
 // Done
-function Done(i) {
-  tasksContent[i].isDone = "true";
+function Done(id) {
+  const task = tasksContent.find((task) => task.id === id);
+  if (!task) return;
+  task.isDone = "true";
   localStorage.setItem("tasksContent", JSON.stringify(tasksContent));
   display(tasksContent);
 }
@@ -108,22 +125,22 @@ function resetForm() {
 if (tasksContent.length != 0) {
   display(tasksContent);
 }
-// // to appear only completed tasks
-// let appearCompletedTaks = document.getElementById("appearCompletedTaks");
-// let appeaeUnCompletedTasks = document.getElementById("appeaeUnCompletedTasks");
-// appearCompletedTaks.onclick = function () {
-//   let done = (completedTasks = tasksContent.filter((e) => e.isDone == "true"));
-//   display(done);
-// };
-// // to appear Uncompleted tasks
-// appeaeUnCompletedTasks.onclick = function () {
-//   let waiting = (completedTasks = tasksContent.filter(
-//     (e) => e.isDone == "false"
-//   ));
-//   display(waiting);
-// };
-// // btn to appear all
-// let AllTasks = document.getElementById("AllTasks");
-// AllTasks.onclick = function () {
-//   display(tasksContent);
-// };
+// to appear only completed tasks
+let appearCompletedTaks = document.getElementById("appearCompletedTaks");
+let appeaeUnCompletedTasks = document.getElementById("appeaeUnCompletedTasks");
+appearCompletedTaks.onclick = function () {
+  let done = (completedTasks = tasksContent.filter((e) => e.isDone == "true"));
+  display(done);
+};
+// to appear Uncompleted tasks
+appeaeUnCompletedTasks.onclick = function () {
+  let waiting = (completedTasks = tasksContent.filter(
+    (e) => e.isDone == "false"
+  ));
+  display(waiting);
+};
+// btn to appear all
+let AllTasks = document.getElementById("AllTasks");
+AllTasks.onclick = function () {
+  display(tasksContent);
+};
